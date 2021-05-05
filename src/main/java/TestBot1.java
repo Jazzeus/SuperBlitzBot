@@ -1,10 +1,10 @@
+import listeners.PingListener;
+import listeners.RoleGiveListener;
+import listeners.RoleListener;
+import listeners.UpdateListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
@@ -27,7 +27,7 @@ public class TestBot1 {
         // All other events will be disabled.
 
         JDA jda = JDABuilder.create("ODM3NzIyMTQ1MzE5ODEzMTkx.YIwriw.AfxIqMJa4N6NPCUwF5FHWk-N6vc", GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
-                .addEventListeners(new PingListener(), new UpdateListener(), new RoleListener())
+                .addEventListeners(new PingListener(), new UpdateListener(), new RoleListener(), new RoleGiveListener())
                 .setActivity(Activity.streaming("TheRealOne | °ping", "https://twitch.tv/therealone_tv"))
 //                .setActivity(Activity.competing("TheRealOne"))
                 .build();

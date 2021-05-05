@@ -1,3 +1,5 @@
+package listeners;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -116,12 +118,15 @@ public class RoleListener extends ListenerAdapter {
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
         if (msg.getContentRaw().equals("°roles")){
-            System.out.println("shdj");
-            embedBuilder.setColor(Color.green);
-//            embedBuilder.setTitle("ERFOLG! ROLLE ENTFERNT!");
+            String allRoles = "";
+            for (Role role : guild.getRoles()) {
+                allRoles = allRoles + "\n" + role.getAsMention();
+            }
+            embedBuilder.setColor(Color.blue);
+            embedBuilder.setTitle("ALLE ROLLEN AUF " + guild.getName());
             embedBuilder.addField("", ""/*"https://discordapp.com/users/601715164835741696"*/, false);
-            embedBuilder.setDescription(user.getAsMention() + "\n" );
-            embedBuilder.setThumbnail("https://media.giphy.com/media/hQFPzwPPHlH86qtW3m/giphy.gif");
+            embedBuilder.setDescription(allRoles);
+            embedBuilder.setThumbnail(guild.getIconUrl());
             embedBuilder.setFooter("Angefragt von: " +user.getAsTag(), user.getAvatarUrl());
             channel.sendMessage(embedBuilder.build()).queue();
         }
