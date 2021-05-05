@@ -53,7 +53,7 @@ public class RoleListener extends ListenerAdapter {
                     // wenn da ein Fehler passiert...
                     try {
                         guild.addRoleToMember(member, listeFRollen.get(0)).queue();
-                        bestätigungGet("https://media.giphy.com/media/ej0cjmiFD525JgbMsL/giphy.gif", "Rolle "+listeFRollen.get(0).getName()+" hinzugefügt!", user, channel);
+                        bestätigungGet("https://media.giphy.com/media/ej0cjmiFD525JgbMsL/giphy.gif", "Rolle "+listeFRollen.get(0).getName()+" wurde dir hinzugefügt!", user, channel);
                         hatRolleSchon = true;
                     } catch (HierarchyException fehlerZuHoch) {
                         System.out.println("Sie können keine Rolle ändern, deren höchste Rolle höher oder gleich hoch ist wie die eigene!");
@@ -63,7 +63,7 @@ public class RoleListener extends ListenerAdapter {
                     // .get(0) "Holt sich" Rolle an der ersten Listenstelle
                     if (member.getRoles().contains(listeFRollen.get(0))) {
                         guild.removeRoleFromMember(member, listeFRollen.get(0)).queue();
-                        bestätigungRemove("https://cdn.dribbble.com/users/1483888/screenshots/6101062/success_animation.gif", "Rolle "+listeFRollen.get(0).getName()+" entfernt!", user, channel);
+                        bestätigungRemove("https://cdn.dribbble.com/users/1483888/screenshots/6101062/success_animation.gif", "Rolle "+listeFRollen.get(0).getName()+" wurde dir entfernt!", user, channel);
                     } else {
                         System.out.println("Du hast diese Rolle nicht!");
                         fehlermeldungen("https://media.giphy.com/media/FlWpltZ9OOcUg/giphy.gif", "Du hast diese Rolle nicht und kannst sie somit nicht entfernen!", user, channel);
@@ -86,7 +86,7 @@ public class RoleListener extends ListenerAdapter {
         embedBuilder.addField(text, "https://discordapp.com/users/601715164835741696", false);
         embedBuilder.setDescription(user.getAsMention() + "\n");
         embedBuilder.setThumbnail(gif);
-        embedBuilder.setFooter(user.getAsTag(), user.getAvatarUrl());
+        embedBuilder.setFooter("Angefragt von: " +user.getAsTag(), user.getAvatarUrl());
         channel.sendMessage(embedBuilder.build()).queue();
     }
 
