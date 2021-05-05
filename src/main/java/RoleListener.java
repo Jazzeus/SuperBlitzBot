@@ -39,9 +39,11 @@ public class RoleListener extends ListenerAdapter {
             // ignoreCase, missachtet die Groß & Kleinschreibung
             // RolesByName = Rolle wird anhand des Namens "geholt"
             List<Role> listeFRollen = guild.getRolesByName(argumenteFRolle[2], true);
+            System.out.println(guild.getRolesByName(argumenteFRolle[2], true));
             // Wenn .size() = 0 --> liste leer
             if (listeFRollen.size() == 0) {
                 fehlermeldungen("https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif", "Keine Rolle mit diesem Name gefunden!", user, channel);
+                System.out.println(guild.getRolesByName(argumenteFRolle[2], true));
                 // NEU!
             }if (member.getRoles().contains(listeFRollen.get(0)) && argumenteFRolle[1].equals("get")){
                 fehlermeldungen("https://media.giphy.com/media/1LYS8RmnsFwg8/giphy.gif", "Du hast diese Rolle ("+listeFRollen.get(0).getName()+") schon!", user, channel);
@@ -51,7 +53,7 @@ public class RoleListener extends ListenerAdapter {
                     // wenn da ein Fehler passiert...
                     try {
                         guild.addRoleToMember(member, listeFRollen.get(0)).queue();
-                        bestätigungGet("https://media.giphy.com/media/ej0cjmiFD525JgbMsL/giphy.gif", "Rolle <<"+listeFRollen.get(0).getName()+">> hinzugefügt!", user, channel);
+                        bestätigungGet("https://media.giphy.com/media/ej0cjmiFD525JgbMsL/giphy.gif", "Rolle "+listeFRollen.get(0).getName()+" hinzugefügt!", user, channel);
                         hatRolleSchon = true;
                     } catch (HierarchyException fehlerZuHoch) {
                         System.out.println("Sie können keine Rolle ändern, deren höchste Rolle höher oder gleich hoch ist wie die eigene!");
@@ -64,7 +66,7 @@ public class RoleListener extends ListenerAdapter {
                         bestätigungRemove("https://cdn.dribbble.com/users/1483888/screenshots/6101062/success_animation.gif", "Rolle "+listeFRollen.get(0).getName()+" entfernt!", user, channel);
                     } else {
                         System.out.println("Du hast diese Rolle nicht!");
-                        fehlermeldungen("https://media.giphy.com/media/FlWpltZ9OOcUg/giphy.gif", "Du hast diese Rolle nicht und kannst sie somit nicht zuweisen!", user, channel);
+                        fehlermeldungen("https://media.giphy.com/media/FlWpltZ9OOcUg/giphy.gif", "Du hast diese Rolle nicht und kannst sie somit nicht entfernen!", user, channel);
                     }
                 } else {
                     System.out.println("Nichts richtíges eingegeben");
@@ -116,9 +118,9 @@ public class RoleListener extends ListenerAdapter {
         if (msg.getContentRaw().equals("°roles")){
             System.out.println("shdj");
             embedBuilder.setColor(Color.green);
-            embedBuilder.setTitle("ERFOLG! ROLLE ENTFERNT!");
+//            embedBuilder.setTitle("ERFOLG! ROLLE ENTFERNT!");
             embedBuilder.addField("", ""/*"https://discordapp.com/users/601715164835741696"*/, false);
-            embedBuilder.setDescription(user.getAsMention() + "\n" + String.valueOf(guild.getRoles().));
+            embedBuilder.setDescription(user.getAsMention() + "\n" );
             embedBuilder.setThumbnail("https://media.giphy.com/media/hQFPzwPPHlH86qtW3m/giphy.gif");
             embedBuilder.setFooter("Angefragt von: " +user.getAsTag(), user.getAvatarUrl());
             channel.sendMessage(embedBuilder.build()).queue();
