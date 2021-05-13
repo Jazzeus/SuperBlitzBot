@@ -28,6 +28,9 @@ public class RoleListener extends ListenerAdapter {
         // Splitted nach dem Leerzeichen
         String[] argumenteFRolle = command.split(" ");
         if (argumenteFRolle[0].equals("°role")) {
+            if (!(argumenteFRolle[1].equals("get") || argumenteFRolle[1].equals("remove"))) {
+                return;
+            }
             System.out.println(member.getRoles());
             if (argumenteFRolle.length < 3) {
                 System.out.println("Keine Rolle angegeben!");
@@ -43,29 +46,34 @@ public class RoleListener extends ListenerAdapter {
             List<Role> listeFRollen = guild.getRolesByName(argumenteFRolle[2], true);
             System.out.println(guild.getRolesByName(argumenteFRolle[2], true));
             // Wenn .size() = 0 --> liste leer
-            if (listeFRollen.size() == 0) {
+            if (listeFRollen.size() == 0 && (argumenteFRolle[1].equals("get") ^ argumenteFRolle[1].equals("remove"))) {
                 fehlermeldungen("https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif", "Keine Rolle mit diesem Name gefunden!", user, channel);
                 System.out.println(guild.getRolesByName(argumenteFRolle[2], true));
                 // NEU!
-            }if (member.getRoles().contains(listeFRollen.get(0)) && argumenteFRolle[1].equals("get")){
-                fehlermeldungen("https://media.giphy.com/media/1LYS8RmnsFwg8/giphy.gif", "Du hast diese Rolle ("+listeFRollen.get(0).getName()+") schon!", user, channel);
             }
-            else if (listeFRollen.size() == 1) {
+            if (member.getRoles().contains(listeFRollen.get(0)) && argumenteFRolle[1].equals("get")) {
+                fehlermeldungen("https://media.giphy.com/media/1LYS8RmnsFwg8/giphy.gif", "Du hast diese Rolle (" + listeFRollen.get(0).getName() + ") schon!", user, channel);
+            } else if (listeFRollen.size() == 1) {
                 if (argumenteFRolle[1].equals("get")) {
                     // wenn da ein Fehler passiert...
                     try {
                         guild.addRoleToMember(member, listeFRollen.get(0)).queue();
-                        bestätigungGet("https://media.giphy.com/media/ej0cjmiFD525JgbMsL/giphy.gif", "Rolle "+listeFRollen.get(0).getName()+" wurde dir hinzugefügt!", user, channel);
+                        bestätigungGet("https://media.giphy.com/media/ej0cjmiFD525JgbMsL/giphy.gif", "Rolle " + listeFRollen.get(0).getName() + " wurde dir hinzugefügt!", user, channel);
                         hatRolleSchon = true;
                     } catch (HierarchyException fehlerZuHoch) {
                         System.out.println("Sie können keine Rolle ändern, deren höchste Rolle höher oder gleich hoch ist wie die eigene!");
-                        fehlermeldungen("https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif", "Du kannst keine Rolle ändern, die höher oder gleich weit oben in der Hierarchie ist, wie Deine. \nOder der Bot steht in der Hierarchie nicht über der genannten Rolle ("+listeFRollen.get(0).getName()+")!", user, channel);
+                        fehlermeldungen("https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif", "Du kannst keine Rolle ändern, die höher oder gleich weit oben in der Hierarchie ist, wie Deine. \nOder der Bot steht in der Hierarchie nicht über der genannten Rolle (" + listeFRollen.get(0).getName() + ")!", user, channel);
                     }
                 } else if (argumenteFRolle[1].equals("remove")) {
                     // .get(0) "Holt sich" Rolle an der ersten Listenstelle
                     if (member.getRoles().contains(listeFRollen.get(0))) {
-                        guild.removeRoleFromMember(member, listeFRollen.get(0)).queue();
-                        bestätigungRemove("https://cdn.dribbble.com/users/1483888/screenshots/6101062/success_animation.gif", "Rolle "+listeFRollen.get(0).getName()+" wurde dir entfernt!", user, channel);
+                        try {
+                            guild.removeRoleFromMember(member, listeFRollen.get(0)).queue();
+                            bestätigungRemove("https://cdn.dribbble.com/users/1483888/screenshots/6101062/success_animation.gif", "Rolle " + listeFRollen.get(0).getName() + " wurde dir entfernt!", user, channel);
+                        } catch (HierarchyException fehlerZuHoch) {
+                            System.out.println("Sie können keine Rolle ändern, deren höchste Rolle höher oder gleich hoch ist wie die eigene!");
+                            fehlermeldungen("https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif", "Du kannst keine Rolle ändern, die höher oder gleich weit oben in der Hierarchie ist, wie Deine. \nOder der Bot steht in der Hierarchie nicht über der genannten Rolle (" + listeFRollen.get(0).getName() + ")!", user, channel);
+                        }
                     } else {
                         System.out.println("Du hast diese Rolle nicht!");
                         fehlermeldungen("https://media.giphy.com/media/FlWpltZ9OOcUg/giphy.gif", "Du hast diese Rolle nicht und kannst sie somit nicht entfernen!", user, channel);
@@ -88,7 +96,7 @@ public class RoleListener extends ListenerAdapter {
         embedBuilder.addField(text, "https://discordapp.com/users/601715164835741696", false);
         embedBuilder.setDescription(user.getAsMention() + "\n");
         embedBuilder.setThumbnail(gif);
-        embedBuilder.setFooter("Angefragt von: " +user.getAsTag(), user.getAvatarUrl());
+        embedBuilder.setFooter("Angefragt von: " + user.getAsTag(), user.getAvatarUrl());
         channel.sendMessage(embedBuilder.build()).queue();
     }
 
@@ -100,9 +108,10 @@ public class RoleListener extends ListenerAdapter {
         embedBuilder.addField(text, "https://discordapp.com/users/601715164835741696", false);
         embedBuilder.setDescription(user.getAsMention() + "\n");
         embedBuilder.setThumbnail(gif);
-        embedBuilder.setFooter("Angefragt von: " +user.getAsTag(), user.getAvatarUrl());
+        embedBuilder.setFooter("Angefragt von: " + user.getAsTag(), user.getAvatarUrl());
         channel.sendMessage(embedBuilder.build()).queue();
     }
+
     private void bestätigungRemove(String gif, String text, User user, MessageChannel channel) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
@@ -111,13 +120,14 @@ public class RoleListener extends ListenerAdapter {
         embedBuilder.addField(text, ""/*"https://discordapp.com/users/601715164835741696"*/, false);
         embedBuilder.setDescription(user.getAsMention() + "\n");
         embedBuilder.setThumbnail(gif);
-        embedBuilder.setFooter("Angefragt von: " +user.getAsTag(), user.getAvatarUrl());
+        embedBuilder.setFooter("Angefragt von: " + user.getAsTag(), user.getAvatarUrl());
         channel.sendMessage(embedBuilder.build()).queue();
     }
-    private void allRoles(Message msg, User user, Guild guild, MessageChannel channel){
+
+    private void allRoles(Message msg, User user, Guild guild, MessageChannel channel) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
-        if (msg.getContentRaw().equals("°roles")){
+        if (msg.getContentRaw().equals("°roles")) {
             String allRoles = "";
             for (Role role : guild.getRoles()) {
                 allRoles = allRoles + "\n" + role.getAsMention();
@@ -127,7 +137,7 @@ public class RoleListener extends ListenerAdapter {
             embedBuilder.addField("", ""/*"https://discordapp.com/users/601715164835741696"*/, false);
             embedBuilder.setDescription(allRoles);
             embedBuilder.setThumbnail(guild.getIconUrl());
-            embedBuilder.setFooter("Angefragt von: " +user.getAsTag(), user.getAvatarUrl());
+            embedBuilder.setFooter("Angefragt von: " + user.getAsTag(), user.getAvatarUrl());
             channel.sendMessage(embedBuilder.build()).queue();
         }
     }

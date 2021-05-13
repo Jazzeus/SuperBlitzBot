@@ -32,6 +32,5 @@ public class TestBot1 {
 //                .setActivity(Activity.competing("TheRealOne"))
                 .build();
         instance = jda;
-
     }
 }
